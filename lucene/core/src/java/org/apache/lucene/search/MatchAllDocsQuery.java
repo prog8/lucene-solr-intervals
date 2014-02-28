@@ -26,6 +26,8 @@ import org.apache.lucene.util.Bits;
 
 import java.util.Set;
 import java.io.IOException;
+import org.apache.lucene.search.intervals.Interval;
+import org.apache.lucene.search.intervals.IntervalCollector;
 
 /**
  * A query that matches all documents.
@@ -81,7 +83,7 @@ public class MatchAllDocsQuery extends Query {
 
     @Override
     public IntervalIterator intervals(boolean collectIntervals) throws IOException {
-      throw new UnsupportedOperationException("MatchAllDocsQuery doesn't support IntervalIterators");
+      return IntervalIterator.NO_MORE_INTERVALS;
     }
 
     public long cost() {

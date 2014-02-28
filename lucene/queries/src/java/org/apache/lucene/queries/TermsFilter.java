@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -172,6 +173,21 @@ public final class TermsFilter extends Filter {
     this.termsAndFields = termsAndFields.toArray(new TermsAndField[termsAndFields.size()]);
     this.hashCode = hash;
     
+  }
+  
+  public List<Term> getTerms() {
+      List<Term> result = new LinkedList<Term>();
+      final BytesRef spare = new BytesRef(this.termsBytes);
+      
+      for (TermsAndField termsAndField : this.termsAndFields) {
+         for (int i = termsAndField.start; i < termsAndField.end; i++) {
+           spare.offset = offsets[i];
+           spare.length = offsets[i + 1] - offsets[i];
+          }
+          Term term = new Term(termsAndField.field, spare);
+          result.add(term);
+      }
+      return result;
   }
   
   
