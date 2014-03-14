@@ -180,7 +180,12 @@ public abstract class Weight {
    * <b>NOTE:</b> the default implementation returns <code>false</code>, i.e.
    * the <code>Scorer</code> scores documents in-order.
    */
+  public boolean scoresDocsOutOfOrder() { return false; }
 
+  Scorer scorer(AtomicReaderContext context, boolean scoreDocsInOrder, boolean topScorer, Bits acceptDocs) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+  
   /**
    * Feature flags used to control low-level posting list features. These flags
    * all Collectors and scorers to specify their requirements for document
