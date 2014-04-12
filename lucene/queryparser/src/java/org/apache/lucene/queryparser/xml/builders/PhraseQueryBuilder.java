@@ -69,6 +69,7 @@ public class PhraseQueryBuilder implements QueryBuilder {
             }
 
             buffer.reset();
+            source.end();
             source.close();// close original stream
         } catch (IOException ioe) {
             ParserException p = new ParserException(

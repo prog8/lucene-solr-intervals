@@ -58,6 +58,7 @@ public class TermBuilder {
           termsRefAtt.fillBytesRef();
           tp.process(new Term(field, BytesRef.deepCopyOf(bytes)));
         }
+        ts.end();
         ts.close();
       } catch (IOException ioe) {
         throw new ParserException("IOException parsing value:" + value);
