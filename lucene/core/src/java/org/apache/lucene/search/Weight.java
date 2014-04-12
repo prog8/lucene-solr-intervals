@@ -236,8 +236,4 @@ public abstract class Weight {
       return docFlags;
     }
   }
-
-  public boolean scoresDocsOutOfOrder() {
-    return false;
-  }
 }
