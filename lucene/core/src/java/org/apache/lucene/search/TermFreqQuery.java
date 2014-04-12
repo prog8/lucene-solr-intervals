@@ -55,26 +55,34 @@ public class TermFreqQuery extends Query {
     final Weight weight = termQuery.createWeight(searcher);
   
     return new Weight() {
+      @Override
       public Explanation explain(AtomicReaderContext context, int doc) throws IOException {
         return weight.explain(context, doc);
       }
+
+      @Override
       public Query getQuery() {
         return weight.getQuery();
       };
+
+      @Override
       public float getValueForNormalization() throws IOException {
         return weight.getValueForNormalization(); 
       };
-      public void normalize(float norm, float topLevelBoost) { 
+
+      @Override
+      public void normalize(float norm, float topLevelBoost) {
         weight.normalize(norm, topLevelBoost); 
       }
+
+      @Override
       public boolean scoresDocsOutOfOrder() {
         return weight.scoresDocsOutOfOrder();
       }
 
       @Override
-      public Scorer scorer(AtomicReaderContext context, boolean scoreDocsInOrder, boolean topScorer,
-          Weight.PostingFeatures flags, Bits acceptDocs) throws IOException {
-        Scorer ws = weight.scorer(context, scoreDocsInOrder, topScorer, acceptDocs);
+      public Scorer scorer(AtomicReaderContext context, PostingFeatures flags, Bits acceptDocs) throws IOException {
+        Scorer ws = weight.scorer(context, flags, acceptDocs);
         if (null == ws) {
           return null;
         }
