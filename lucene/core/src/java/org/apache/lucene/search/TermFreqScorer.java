@@ -18,7 +18,6 @@ package org.apache.lucene.search;
  */
 
 import java.io.IOException;
-import org.apache.lucene.search.intervals.IntervalIterator;
 
 /** Expert: A <code>Scorer</code> for documents matching a <code>Term</code>
  * <code>IntegerRange.min</code> to <code>IntegerRange.max</code> times.
@@ -27,20 +26,20 @@ class TermFreqScorer extends Scorer {
   private final Scorer scorer;
   private final IntegerRange termFreqRange;
   private final TermFreqDocIdSetIterator scorer_tfdsit;
-  
+
   /**
    * Construct a <code>TermFreqScorer</code>.
-   * 
+   *
    * @param scorer
    *          The score to which term frequency filtering should be applied.
    * @param termFreqRange
    *          The term frequency range filter to apply.
-   */  
+   */
   TermFreqScorer(Scorer scorer, IntegerRange termFreqRange) {
     super(scorer.weight);
     this.scorer = scorer;
     this.termFreqRange = termFreqRange;
-    
+
     this.scorer_tfdsit = new TermFreqDocIdSetIterator(this.scorer, this.termFreqRange);
   }
 
@@ -52,22 +51,17 @@ class TermFreqScorer extends Scorer {
 
   @Override
   public int nextDoc() throws IOException { return scorer_tfdsit.customNextDoc(); }
-  
+
   @Override
   public float score() throws IOException { return scorer.score(); }
 
   @Override
-  public int advance(int target) throws IOException { return scorer_tfdsit.customAdvance(target); }  
-  
+  public int advance(int target) throws IOException { return scorer_tfdsit.customAdvance(target); }
+
   @Override
   public long cost() { return scorer.cost(); }
-  
+
   /** Returns a string representation of this <code>TermFreqScorer</code>. */
   @Override
   public String toString() { return scorer+"@TF="+termFreqRange; }
-
-  @Override
-  public IntervalIterator intervals(boolean collectIntervals) throws IOException {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
 }

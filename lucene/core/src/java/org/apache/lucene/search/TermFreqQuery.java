@@ -32,61 +32,48 @@ public class TermFreqQuery extends Query {
 
   private final TermQuery termQuery;
   private final IntegerRange termFreqRange;
-  
+
   /**
    * Construct a <code>TermFreqQuery</code>.
-   * 
+   *
    * @param termQuery
    *          The TermQuery to which term frequency filtering should be applied.
    * @param termFreqRange
    *          The term frequency range filter to apply.
-   */  
+   */
   public TermFreqQuery(TermQuery termQuery, IntegerRange termFreqRange) {
     this.termQuery = termQuery;
     this.termFreqRange = termFreqRange;
   }
-  
+
   /** Returns the term of this query. */
   public Term getTerm() { return termQuery.getTerm(); }
 
   @Override
   public Weight createWeight(IndexSearcher searcher) throws IOException {
-    
+
     final Weight weight = termQuery.createWeight(searcher);
-  
+
     return new Weight() {
-      @Override
       public Explanation explain(AtomicReaderContext context, int doc) throws IOException {
         return weight.explain(context, doc);
       }
-
-      @Override
       public Query getQuery() {
         return weight.getQuery();
       };
-
-      @Override
       public float getValueForNormalization() throws IOException {
-        return weight.getValueForNormalization(); 
+        return weight.getValueForNormalization();
       };
-
-      @Override
       public void normalize(float norm, float topLevelBoost) {
-        weight.normalize(norm, topLevelBoost); 
+        weight.normalize(norm, topLevelBoost);
       }
-
-      @Override
+      public Scorer scorer(AtomicReaderContext context, boolean scoreDocsInOrder, boolean topScorer, Bits acceptDocs) throws IOException {
+        Scorer ws = weight.scorer(context, scoreDocsInOrder, topScorer, acceptDocs);
+        if (null == ws) return null;
+        return new TermFreqScorer(ws, termFreqRange);
+      }
       public boolean scoresDocsOutOfOrder() {
         return weight.scoresDocsOutOfOrder();
-      }
-
-      @Override
-      public Scorer scorer(AtomicReaderContext context, PostingFeatures flags, Bits acceptDocs) throws IOException {
-        Scorer ws = weight.scorer(context, flags, acceptDocs);
-        if (null == ws) {
-          return null;
-        }
-        return new TermFreqScorer(ws, termFreqRange);
       }
     };
   }
@@ -108,12 +95,12 @@ public class TermFreqQuery extends Query {
     if (!(o instanceof TermFreqQuery))
       return false;
     TermFreqQuery other = (TermFreqQuery)o;
-    
+
     if (termQuery != null ? !termQuery.equals(other.termQuery) : other.termQuery != null) return false;
     if (termFreqRange != null ? !termFreqRange.equals(other.termFreqRange) : other.termFreqRange != null) return false;
-    
+
     return true;
-    
+
   }
 
   /** Returns a hash code value for this object.*/

@@ -78,7 +78,7 @@ final public class TermFilter extends Filter {
     if (!termsEnum.seekExact(term.bytes())) {
       return null;
     }
-    
+
     return termsEnum.docs(acceptDocs, null, flags);
   }
 

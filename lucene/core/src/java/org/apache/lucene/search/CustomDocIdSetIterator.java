@@ -30,10 +30,10 @@ public abstract class CustomDocIdSetIterator {
    * Returns whether or not the current document matches user-defined criteria.
    */
   public abstract boolean match() throws IOException;
-  
+
   private final DocIdSetIterator ds_it;
   protected final DocIdSetIterator docIdSetIterator() { return ds_it; }
-  
+
   public CustomDocIdSetIterator(DocIdSetIterator ds_it) {
     this.ds_it = ds_it;
   }
@@ -42,29 +42,29 @@ public abstract class CustomDocIdSetIterator {
    * Advances to the next <code>match()</code>-ing document in the set and returns
    * the doc it is currently on, or <code>DocIdSetIterator.NO_MORE_DOCS</code> if
    * there are no more matching docs in the set.<br>
-   * 
+   *
    * <b>NOTE:</b> after the iterator has exhausted you should not call this
    * method, as it may result in unpredicted behavior.
    */
   public final int customNextDoc() throws IOException {
     return customImpl(ds_it.nextDoc());
   }
-  
+
   /**
    * Advances to the first <code>match()</code>-ing document beyond the current
    * whose document number is greater than or equal to <i>target</i>, and returns
-   * the document number itself. 
+   * the document number itself.
    * Exhausts the iterator and returns <code>DocIdSetIterator.NO_MORE_DOCS</code>
    * if <i>target</i> is greater than the highest document number in the set.
    * <p>
-   * 
+   *
    * Implemented via <code>DocIdSetIterator.advance(target)</code> and
    * <code>DocIdSetIterator.nextDoc()</code> calls.
    */
   public final int customAdvance(int target) throws IOException {
     return customImpl(ds_it.advance(target));
   }
-  
+
   private final int customImpl(int doc) throws IOException {
     while (DocIdSetIterator.NO_MORE_DOCS != doc) {
       if (!match()) {
@@ -76,5 +76,5 @@ public abstract class CustomDocIdSetIterator {
     }
     return doc;
   }
-  
+
 }

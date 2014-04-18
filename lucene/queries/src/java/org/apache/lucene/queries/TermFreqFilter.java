@@ -34,34 +34,34 @@ import java.io.IOException;
  * <code>IntegerRange.min</code> to <code>IntegerRange.max</code> times.
  */
 final public class TermFreqFilter extends Filter {
-  
+
   private final TermFilter termFilter;
   private final IntegerRange termFreqRange;
-  
+
   /**
    * Construct a <code>TermFreqFilter</code>.
-   * 
+   *
    * @param termFilter
    *          The TermFilter to which term frequency filtering should be applied.
    * @param termFreqRange
    *          The term frequency range filter to apply.
-   */  
+   */
   public TermFreqFilter(TermFilter termFilter, IntegerRange termFreqRange) {
     this.termFilter = termFilter;
     this.termFreqRange = termFreqRange;
   }
-  
+
   /**
    * @return The term this filter includes documents with.
    */
   public Term getTerm() {
     return termFilter.getTerm();
   }
-  
+
   @Override
   public DocIdSet getDocIdSet(AtomicReaderContext context, final Bits acceptDocs) throws IOException {
     final DocsEnum docsEnum = termFilter.getDocsEnum(context, acceptDocs, DocsEnum.FLAG_FREQS);
-    
+
     return new DocIdSet() {
       @Override
       public DocIdSetIterator iterator() throws IOException {
@@ -81,28 +81,28 @@ final public class TermFreqFilter extends Filter {
       }
     };
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    
+
     TermFreqFilter that = (TermFreqFilter) o;
-    
+
     if (termFilter != null ? !termFilter.equals(that.termFilter) : that.termFilter != null) return false;
     if (termFreqRange != null ? !termFreqRange.equals(that.termFreqRange) : that.termFreqRange != null) return false;
-    
+
     return true;
   }
-  
+
   @Override
   public int hashCode() {
     return (termFilter != null ? termFilter.hashCode() : 0) ^ (termFreqRange != null ? termFreqRange.hashCode() : 0);
   }
-  
+
   @Override
   public String toString() {
     return termFilter+"@TF="+termFreqRange;
   }
-  
+
 }

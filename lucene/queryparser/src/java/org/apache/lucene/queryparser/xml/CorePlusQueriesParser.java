@@ -25,9 +25,9 @@ import org.apache.lucene.queryparser.xml.builders.*;
  * Assembles a QueryBuilder which uses Query objects from
  * Lucene's <code>queries</code> module in addition to core
  * queries.
- * 
+ *
  * Unlike CorePlusExtensionsParser this QueryBuilder does not use
- * Query objects from Lucene's <code>sandbox</code> module. 
+ * Query objects from Lucene's <code>sandbox</code> module.
  */
 public class CorePlusQueriesParser extends CoreParser {
 
@@ -52,7 +52,7 @@ public class CorePlusQueriesParser extends CoreParser {
 
   protected CorePlusQueriesParser(String defaultField, Analyzer analyzer, QueryParser parser) {
     super(defaultField, analyzer, parser);
-    
+
     {
       FilterBuilder termFilterBuilder = new TermFilterBuilder(termBuilder);
       filterFactory.addBuilder("TermFilter", termFilterBuilder);
@@ -67,6 +67,6 @@ public class CorePlusQueriesParser extends CoreParser {
     String fields[] = {"contents"};
     queryFactory.addBuilder("LikeThisQuery", new LikeThisQueryBuilder(analyzer, fields));
     queryFactory.addBuilder("BoostingQuery", new BoostingQueryBuilder(queryFactory));
-    
+
   }
 }

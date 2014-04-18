@@ -34,33 +34,33 @@ import java.io.IOException;
  * equivalent query (a BooleanQuery with many "should" TermQueries)
  */
 public final class TermsFreqFilter extends Filter {
-  
+
   private final TermsFilter termsFilter;
   private final IntegerRange termFreqRange;
-  
+
   /**
    * Construct a <code>TermsFreqFilter</code>.
-   * 
+   *
    * @param termsFilter
    *          The TermsFilter to which term frequency filtering should be applied.
    * @param termFreqRange
    *          The term frequency range filter to apply.
-   */  
+   */
   public TermsFreqFilter(TermsFilter termsFilter, IntegerRange termFreqRange) {
     this.termsFilter = termsFilter;
     this.termFreqRange = termFreqRange;
   }
-  
+
   @Override
   public DocIdSet getDocIdSet(AtomicReaderContext context, Bits acceptDocs) throws IOException {
     return termsFilter.getDocIdSet(
         context,
-        acceptDocs, 
-        DocsEnum.FLAG_FREQS,     
+        acceptDocs,
+        DocsEnum.FLAG_FREQS,
         new TermsFilter.DocsEnumAdapter() {
           public DocsEnum get(final DocsEnum in) throws IOException {
             if (null == in) return null;
-            
+
             return new DocsEnum() {
               private final TermFreqDocIdSetIterator tfds_it = new TermFreqDocIdSetIterator(in, TermsFreqFilter.this.termFreqRange);
               @Override
@@ -78,16 +78,16 @@ public final class TermsFreqFilter extends Filter {
               @Override
               public long cost() {
                 return in.cost();
-              }              
+              }
               @Override
               public int freq() throws IOException {
                 return in.freq();
-              }              
+              }
             };
           }
         });
   }
-  
+
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -96,23 +96,23 @@ public final class TermsFreqFilter extends Filter {
     if ((obj == null) || (obj.getClass() != this.getClass())) {
       return false;
     }
-    
+
     TermsFreqFilter test = (TermsFreqFilter) obj;
-    
+
     if (termsFilter != null ? !termsFilter.equals(test.termsFilter) : test.termsFilter != null) return false;
     if (termFreqRange != null ? !termFreqRange.equals(test.termFreqRange) : test.termFreqRange != null) return false;
-    
+
     return true;
   }
-  
+
   @Override
   public int hashCode() {
     return (termsFilter != null ? termsFilter.hashCode() : 0) ^ (termFreqRange != null ? termFreqRange.hashCode() : 0);
   }
-  
+
   @Override
   public String toString() {
     return termsFilter+"@TF="+termFreqRange;
   }
-  
+
 }

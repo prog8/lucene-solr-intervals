@@ -25,16 +25,16 @@ import org.apache.lucene.index.FieldInfo.IndexOptions;
 /**
  * This abstract class wraps a {@link DocsEnum} object and defines methods to
  * iterate over its set of doc ids, matching based on documents' term frequency.
- * 
+ *
  * <b>NOTE:</b>
  * <code>match()</code>-ing is implemented via calls to <code>DocsEnum.freq()</code>.
  * If the {@link DocsEnum} was obtained without <code>DocsEnum.FLAG_FREQS</code>
  * the result of the matching are undefined.
  */
 public class TermFreqDocIdSetIterator extends CustomDocIdSetIterator {
-  
+
   private final IntegerRange termFreqRange;
-  
+
   /**
    * Returns whether or not the current document's term frequency falls within
    * the <code>termFreqRange</code> range.
@@ -44,10 +44,10 @@ public class TermFreqDocIdSetIterator extends CustomDocIdSetIterator {
         termFreqRange == null ||
         termFreqRange.includes(((DocsEnum)docIdSetIterator()).freq());
   }
-  
+
   public TermFreqDocIdSetIterator(DocsEnum docsEnum, IntegerRange termFreqRange) {
     super(docsEnum);
     this.termFreqRange = termFreqRange;
   }
-  
+
 }
